@@ -1,6 +1,5 @@
-import Head from 'next/head';
-import Image from 'next/image';
+import HomeTemplate from '../lib/templates/home/home.template';
 
-export default function Home() {
-  return <div className='bg-[#F5B7B1] text-center'>Hello World</div>;
+export default function Home(): JSX.Element {
+  return <HomeTemplate />;
 }
