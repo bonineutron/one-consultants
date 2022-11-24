@@ -1,29 +1,33 @@
 import LayoutOrganism from '../../organisms/layout/layout.organism';
 import { IUser } from '../../../shared/interfaces/users.interface';
 import type { RootState } from '../../../shared/redux/store/store';
+import { RiSave3Fill } from 'react-icons/ri';
 import { useSelector } from 'react-redux';
 import { BiError } from 'react-icons/bi';
+import { useState } from 'react';
 import Link from 'next/link';
-import axios from 'axios';
+import ModalAtom from '../../atoms/modal/modal.atom';
 
 export default function SummaryTemplate(): JSX.Element {
   // settings
   const users = useSelector((state: RootState) => state.users);
 
+  //states
+  const [modal, setModal] = useState<boolean>(false);
+
   // methods
-  async function sendUser(url: string, data: IUser[]) {
-    // Default options are marked with *
-    const response = await fetch(url, {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      mode: 'cors', // no-cors, *cors, same-origin
+  const sendUser = async () => {
+    await fetch('http://localhost:4000/users/create/', {
+      method: 'POST',
+      mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify(data) // body data type must match "Content-Type" header
-    });
-    return response.json(); // parses JSON response into native JavaScript objects
-  }
+      body: JSON.stringify(users)
+    }).then(() => setModal(true));
+  };
+
   return (
     <LayoutOrganism title='Envío de Usuarios' metaName='description' content='send users stored in redux state'>
       {users.length > 0 ? (
@@ -65,9 +69,9 @@ export default function SummaryTemplate(): JSX.Element {
             </div>
           ))}
           <button
-            onClick={() => sendUser('https://one-consultants-back.vercel.app/users/create/', users)}
-            className='w-[140px] h-[40px] rounded-lg text-white font-semibold text-[18px] bg-secondary-color'>
-            Agregar Otro
+            onClick={() => sendUser()}
+            className='w-[160px] h-[40px] rounded-lg text-white font-semibold text-[18px] bg-primary-color'>
+            Enviar Usuarios
           </button>
         </div>
       ) : (
@@ -82,6 +86,24 @@ export default function SummaryTemplate(): JSX.Element {
             Crear un Usuario
           </Link>
         </div>
+      )}
+      {modal && (
+        <ModalAtom closeModal={setModal}>
+          {' '}
+          <div className='w-full'>
+            <div className='flex flex-col items-center text-center'>
+              <RiSave3Fill className='text-[70px]' />
+              <span className='text-[20px] font-semibold'>Usuario enviado a Base de Datos</span>
+            </div>
+            <div className='flex justify-center mt-6'>
+              <Link
+                href='/user-list'
+                className='w-[240px] h-[40px] flex justify-center items-center rounded-lg text-white font-semibold text-[18px] bg-primary-color'>
+                Ir a Usuarios Registrados
+              </Link>
+            </div>
+          </div>
+        </ModalAtom>
       )}
     </LayoutOrganism>
   );
