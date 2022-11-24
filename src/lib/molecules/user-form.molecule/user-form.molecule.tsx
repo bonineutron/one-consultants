@@ -106,29 +106,26 @@ export default function UserFormMolecule() {
         </div>
       )}
       {modal && (
-        <ModalAtom
-          closeModal={setModal}
-          children={
-            <div className='w-full'>
-              <div className='flex flex-col items-center text-center'>
-                <RiSave3Fill className='text-[70px]' />
-                <span className='text-[20px] font-semibold'>Usuario agregado al resumen</span>
-              </div>
-              <div className='flex justify-between mt-6'>
-                <button
-                  onClick={() => newUser()}
-                  className='w-[140px] h-[40px] rounded-lg text-white font-semibold text-[18px] bg-secondary-color'>
-                  Agregar Otro
-                </button>
-                <Link
-                  href='/summary'
-                  className='w-[140px] h-[40px] flex justify-center items-center rounded-lg text-white font-semibold text-[18px] bg-primary-color'>
-                  Ir a Resumen
-                </Link>
-              </div>
+        <ModalAtom closeModal={setModal}>
+          <div className='w-full'>
+            <div className='flex flex-col items-center text-center'>
+              <RiSave3Fill className='text-[70px]' />
+              <span className='text-[20px] font-semibold'>Usuario agregado al resumen</span>
             </div>
-          }
-        />
+            <div className='flex justify-between mt-6'>
+              <button
+                onClick={() => newUser()}
+                className='w-[140px] h-[40px] rounded-lg text-white font-semibold text-[18px] bg-secondary-color'>
+                Agregar Otro
+              </button>
+              <Link
+                href='/summary'
+                className='w-[140px] h-[40px] flex justify-center items-center rounded-lg text-white font-semibold text-[18px] bg-primary-color'>
+                Ir a Resumen
+              </Link>
+            </div>
+          </div>
+        </ModalAtom>
       )}
     </form>
   );
