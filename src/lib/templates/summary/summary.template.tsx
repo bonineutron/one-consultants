@@ -4,17 +4,26 @@ import type { RootState } from '../../../shared/redux/store/store';
 import { useSelector } from 'react-redux';
 import { BiError } from 'react-icons/bi';
 import Link from 'next/link';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 
 export default function SummaryTemplate(): JSX.Element {
   // settings
   const users = useSelector((state: RootState) => state.users);
 
   // methods
-  const sendUser = (): void => {
-    axios.post('https://one-consultants-back.vercel.app/users/create', users[0]).then((data) => console.log(data.data));
-  };
-
+  async function sendUser(url: string, data: IUser[]) {
+    // Default options are marked with *
+    const response = await fetch(url, {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
   return (
     <LayoutOrganism title='Envío de Usuarios' metaName='description' content='send users stored in redux state'>
       {users.length > 0 ? (
@@ -56,7 +65,7 @@ export default function SummaryTemplate(): JSX.Element {
             </div>
           ))}
           <button
-            onClick={() => sendUser()}
+            onClick={() => sendUser('https://one-consultants-back.vercel.app/users/create/', users)}
             className='w-[140px] h-[40px] rounded-lg text-white font-semibold text-[18px] bg-secondary-color'>
             Agregar Otro
           </button>
